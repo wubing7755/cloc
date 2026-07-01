@@ -1,0 +1,14 @@
+#ifndef CODELINECALCULATOR_EXPORT_H
+#define CODELINECALCULATOR_EXPORT_H
+
+#if defined(_WIN32) && defined(CODELINECALCULATOR_SHARED)
+#if defined(CODELINECALCULATOR_BUILDING_LIBRARY)
+#define CODELINECALCULATOR_API __declspec(dllexport)
+#else
+#define CODELINECALCULATOR_API __declspec(dllimport)
+#endif
+#else
+#define CODELINECALCULATOR_API
+#endif
+
+#endif /* CODELINECALCULATOR_EXPORT_H */
