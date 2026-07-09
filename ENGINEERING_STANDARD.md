@@ -1,6 +1,6 @@
 # Engineering Standard
 
-This document records the engineering baseline for CodeLineCalculator.
+This document records the engineering baseline for Cloc.
 
 ## Principles
 
@@ -13,8 +13,8 @@ This document records the engineering baseline for CodeLineCalculator.
 ## Project Shape
 
 ```text
-include/codelinecalculator/   Public C APIs
-src/codelinecalculator/       Core implementation
+include/cloc/   Public C APIs
+src/cloc/       Core implementation
 src/main.c                    CLI entry point
 tests/                        Focused CTest programs
 tests/package_smoke/          Installed-package consumer smoke test
@@ -30,7 +30,7 @@ doc/guides/                   Topic guides
 
 - Keep the top-level `CMakeLists.txt` small and delegate repeated logic to
   `cmake/` modules.
-- Add implementation files to `CODELINECALCULATOR_CORE_SOURCES` in
+- Add implementation files to `CLOC_CORE_SOURCES` in
   `cmake/Sources.cmake`.
 - Keep CLI sources separate from the reusable core library.
 - Keep public target requirements narrow. Consumers should inherit only what the
@@ -40,8 +40,8 @@ doc/guides/                   Topic guides
 
 ## C API
 
-- Preserve the public `CODELINECALCULATOR_` macro prefix.
-- Use `codelinecalculator_` for public functions.
+- Preserve the public `CLOC_` macro prefix.
+- Use `cloc_` for public functions.
 - Keep public structs stable and documented before adding new fields.
 - Keep implementation-only helpers out of public headers.
 - Avoid global mutable state unless a design note explains why it is necessary.

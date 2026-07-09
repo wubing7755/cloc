@@ -1,21 +1,21 @@
-#include <codelinecalculator/line_counter.h>
-#include <codelinecalculator/source_preset.h>
-#include <codelinecalculator/version.h>
+#include <cloc/line_counter.h>
+#include <cloc/source_preset.h>
+#include <cloc/version.h>
 
 int main(void) {
     const char *suffixes[] = {".no-such-source-suffix"};
-    CodeLineCalculatorScanOptions options = {".", suffixes, 1U};
-    CodeLineCalculatorScanResult result;
+    ClocScanOptions options = {".", suffixes, 1U};
+    ClocScanResult result;
 
-    if (!codelinecalculator_default_source_preset()) {
+    if (!cloc_default_source_preset()) {
         return 1;
     }
 
-    if (CODELINECALCULATOR_VERSION_MAJOR < 0) {
+    if (CLOC_VERSION_MAJOR < 0) {
         return 1;
     }
 
-    return codelinecalculator_count_source_lines(&options, &result) == CODELINECALCULATOR_STATUS_OK
+    return cloc_count_source_lines(&options, &result) == CLOC_STATUS_OK
                ? 0
                : 1;
 }

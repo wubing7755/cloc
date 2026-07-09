@@ -1,4 +1,4 @@
-#include <codelinecalculator/source_preset.h>
+#include <cloc/source_preset.h>
 
 #include "../internal_utils.h"
 
@@ -29,7 +29,7 @@ static const char *const kDotNetSuffixes[] = {
     ".xaml",
 };
 
-static const CodeLineCalculatorSourcePreset kSourcePresets[] = {
+static const ClocSourcePreset kSourcePresets[] = {
     {"common", "Common source files across mainstream project types", kCommonSuffixes,
      CLC_ARRAY_COUNT(kCommonSuffixes)},
     {"c", "C source and header files", kCSuffixes, CLC_ARRAY_COUNT(kCSuffixes)},
@@ -39,11 +39,11 @@ static const CodeLineCalculatorSourcePreset kSourcePresets[] = {
     {"dotnet", ".NET, Razor, and XAML files", kDotNetSuffixes, CLC_ARRAY_COUNT(kDotNetSuffixes)},
 };
 
-const CodeLineCalculatorSourcePreset *codelinecalculator_default_source_preset(void) {
+const ClocSourcePreset *cloc_default_source_preset(void) {
     return &kSourcePresets[0];
 }
 
-const CodeLineCalculatorSourcePreset *codelinecalculator_find_source_preset(const char *name) {
+const ClocSourcePreset *ccloc_find_source_preset(const char *name) {
     size_t index = 0;
 
     for (index = 0; index < CLC_ARRAY_COUNT(kSourcePresets); ++index) {
@@ -55,7 +55,7 @@ const CodeLineCalculatorSourcePreset *codelinecalculator_find_source_preset(cons
     return NULL;
 }
 
-const CodeLineCalculatorSourcePreset *codelinecalculator_source_presets(size_t *count) {
+const ClocSourcePreset *cloc_source_presets(size_t *count) {
     if (count) {
         *count = CLC_ARRAY_COUNT(kSourcePresets);
     }

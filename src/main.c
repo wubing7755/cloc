@@ -1,4 +1,4 @@
-#include <codelinecalculator/line_counter.h>
+#include <cloc/line_counter.h>
 
 #include "cli_options.h"
 
@@ -7,9 +7,9 @@
 int main(int argc, char **argv) {
     CliOptions cli;
     CliParseResult parse_result = CLI_PARSE_EXIT_FAILURE;
-    CodeLineCalculatorScanOptions options;
-    CodeLineCalculatorScanResult result;
-    CodeLineCalculatorStatus status = CODELINECALCULATOR_STATUS_OK;
+    ClocScanOptions options;
+    ClocScanResult result;
+    ClocStatus status = CLOC_STATUS_OK;
 
     parse_result = cli_parse_options(argc, argv, &cli);
     if (parse_result == CLI_PARSE_EXIT_SUCCESS) {
@@ -23,10 +23,10 @@ int main(int argc, char **argv) {
     options.suffixes = cli.suffixes;
     options.suffix_count = cli.suffix_count;
 
-    status = codelinecalculator_count_source_lines(&options, &result);
-    if (status != CODELINECALCULATOR_STATUS_OK) {
+    status = cloc_count_source_lines(&options, &result);
+    if (status != CLOC_STATUS_OK) {
         fprintf(stderr, "Failed to count source lines: %s\n",
-                codelinecalculator_status_name(status));
+                cloc_status_name(status));
         return 1;
     }
 

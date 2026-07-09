@@ -1,23 +1,23 @@
-#include <codelinecalculator/line_counter.h>
-#include <codelinecalculator/source_preset.h>
-#include <codelinecalculator/version.h>
+#include <cloc/line_counter.h>
+#include <cloc/source_preset.h>
+#include <cloc/version.h>
 
 int main(void) {
     const char *suffixes[] = {".no-such-source-suffix"};
-    CodeLineCalculatorScanOptions options = {".", suffixes, 1U};
-    CodeLineCalculatorScanResult result;
-    const CodeLineCalculatorSourcePreset *preset = codelinecalculator_default_source_preset();
+    ClocScanOptions options = {".", suffixes, 1U};
+    ClocScanResult result;
+    const ClocSourcePreset *preset = cloc_default_source_preset();
 
-    if (CODELINECALCULATOR_VERSION_MAJOR < 0 || CODELINECALCULATOR_VERSION_MINOR < 0 ||
-        CODELINECALCULATOR_VERSION_PATCH < 0) {
+    if (CLOC_VERSION_MAJOR < 0 || CLOC_VERSION_MINOR < 0 ||
+        CLOC_VERSION_PATCH < 0) {
         return 1;
     }
 
-    if (!preset || !codelinecalculator_find_source_preset("common")) {
+    if (!preset || !ccloc_find_source_preset("common")) {
         return 1;
     }
 
-    if (codelinecalculator_count_source_lines(&options, &result) != CODELINECALCULATOR_STATUS_OK) {
+    if (cloc_count_source_lines(&options, &result) != CLOC_STATUS_OK) {
         return 1;
     }
 
@@ -25,7 +25,7 @@ int main(void) {
         return 1;
     }
 
-    if (!codelinecalculator_status_name(CODELINECALCULATOR_STATUS_OK)) {
+    if (!cloc_status_name(CLOC_STATUS_OK)) {
         return 1;
     }
 

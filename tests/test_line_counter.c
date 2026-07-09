@@ -1,5 +1,5 @@
-#include <codelinecalculator/compiler.h>
-#include <codelinecalculator/line_counter.h>
+#include <cloc/compiler.h>
+#include <cloc/line_counter.h>
 
 #include "test_assert.h"
 
@@ -8,7 +8,7 @@
 #include <string.h>
 #include <time.h>
 
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
 #include <direct.h>
 #else
 #include <sys/stat.h>
@@ -16,7 +16,7 @@
 #endif
 
 static int create_directory(const char *path) {
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
     if (_mkdir(path) == 0) {
 #else
     if (mkdir(path, 0777) == 0) {
@@ -28,7 +28,7 @@ static int create_directory(const char *path) {
 }
 
 static int create_new_directory(const char *path) {
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
     return _mkdir(path) == 0;
 #else
     return mkdir(path, 0777) == 0;
@@ -160,24 +160,24 @@ static int create_fixture_tree(char *root, size_t root_size) {
 }
 
 static int test_invalid_arguments(void) {
-    CodeLineCalculatorScanResult result;
+    ClocScanResult result;
     const char *suffixes[] = {".c"};
-    CodeLineCalculatorScanOptions options = {"", suffixes, 1U};
+    ClocScanOptions options = {"", suffixes, 1U};
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ((int)codelinecalculator_count_source_lines(NULL, &result),
-                                          (int)CODELINECALCULATOR_STATUS_INVALID_ARGUMENT)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(NULL, &result),
+                                          (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ(
-            (int)codelinecalculator_count_source_lines(&options, &result),
-            (int)CODELINECALCULATOR_STATUS_INVALID_ARGUMENT)) {
+    if (!CLOC_EXPECT_INT_EQ(
+            (int)cloc_count_source_lines(&options, &result),
+            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ(
-            (int)codelinecalculator_count_source_lines(&options, NULL),
-            (int)CODELINECALCULATOR_STATUS_INVALID_ARGUMENT)) {
+    if (!CLOC_EXPECT_INT_EQ(
+            (int)cloc_count_source_lines(&options, NULL),
+            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
@@ -187,10 +187,10 @@ static int test_invalid_arguments(void) {
 static int test_counts_matching_suffixes(void) {
     char root[256];
     const char *suffixes[] = {".c", "h"};
-    CodeLineCalculatorScanOptions options;
-    CodeLineCalculatorScanResult result;
+    ClocScanOptions options;
+    ClocScanResult result;
 
-    if (!CODELINECALCULATOR_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
+    if (!CLOC_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
         return 1;
     }
 
@@ -198,22 +198,22 @@ static int test_counts_matching_suffixes(void) {
     options.suffixes = suffixes;
     options.suffix_count = 2U;
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ(
-            (int)codelinecalculator_count_source_lines(&options, &result),
-            (int)CODELINECALCULATOR_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ(
+            (int)cloc_count_source_lines(&options, &result),
+            (int)CLOC_STATUS_OK)) {
         return 1;
     }
 
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.total_lines, 5U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.total_lines, 5U)) {
         return 1;
     }
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.matched_files, 3U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.matched_files, 3U)) {
         return 1;
     }
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.failed_entries, 0U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.failed_entries, 0U)) {
         return 1;
     }
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.skipped_directories, 4U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.skipped_directories, 4U)) {
         return 1;
     }
 
@@ -223,10 +223,10 @@ static int test_counts_matching_suffixes(void) {
 static int test_counts_user_selected_suffix(void) {
     char root[256];
     const char *suffixes[] = {"cpp"};
-    CodeLineCalculatorScanOptions options;
-    CodeLineCalculatorScanResult result;
+    ClocScanOptions options;
+    ClocScanResult result;
 
-    if (!CODELINECALCULATOR_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
+    if (!CLOC_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
         return 1;
     }
 
@@ -234,16 +234,16 @@ static int test_counts_user_selected_suffix(void) {
     options.suffixes = suffixes;
     options.suffix_count = 1U;
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ(
-            (int)codelinecalculator_count_source_lines(&options, &result),
-            (int)CODELINECALCULATOR_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ(
+            (int)cloc_count_source_lines(&options, &result),
+            (int)CLOC_STATUS_OK)) {
         return 1;
     }
 
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.total_lines, 1U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.total_lines, 1U)) {
         return 1;
     }
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.matched_files, 1U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.matched_files, 1U)) {
         return 1;
     }
 
@@ -253,10 +253,10 @@ static int test_counts_user_selected_suffix(void) {
 static int test_counts_wildcard_common_suffixes(void) {
     char root[256];
     const char *suffixes[] = {"*.js", "*.ts", "*.cs", "*.razor", "*.css"};
-    CodeLineCalculatorScanOptions options;
-    CodeLineCalculatorScanResult result;
+    ClocScanOptions options;
+    ClocScanResult result;
 
-    if (!CODELINECALCULATOR_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
+    if (!CLOC_EXPECT_TRUE(create_fixture_tree(root, sizeof(root)))) {
         return 1;
     }
 
@@ -264,16 +264,16 @@ static int test_counts_wildcard_common_suffixes(void) {
     options.suffixes = suffixes;
     options.suffix_count = 5U;
 
-    if (!CODELINECALCULATOR_EXPECT_INT_EQ(
-            (int)codelinecalculator_count_source_lines(&options, &result),
-            (int)CODELINECALCULATOR_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ(
+            (int)cloc_count_source_lines(&options, &result),
+            (int)CLOC_STATUS_OK)) {
         return 1;
     }
 
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.total_lines, 11U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.total_lines, 11U)) {
         return 1;
     }
-    if (!CODELINECALCULATOR_EXPECT_ULL_EQ(result.matched_files, 5U)) {
+    if (!CLOC_EXPECT_ULL_EQ(result.matched_files, 5U)) {
         return 1;
     }
 

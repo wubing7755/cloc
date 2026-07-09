@@ -43,18 +43,18 @@ try {
         "--preset",
         $Preset,
         "--target",
-        "codelinecalculator"
+        "cloc"
     )
 
     $buildDir = Join-Path (Join-Path $RepoRootPath "build") $Preset
-    $exePath = Join-Path (Join-Path $buildDir "bin") "codelinecalculator.exe"
+    $exePath = Join-Path (Join-Path $buildDir "bin") "cloc.exe"
     if (-not (Test-Path $exePath)) {
         throw "Built executable was not found: $exePath"
     }
 
     New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 
-    $destination = Join-Path $OutputDir "codelinecalculator.exe"
+    $destination = Join-Path $OutputDir "cloc.exe"
     Copy-Item -LiteralPath $exePath -Destination $destination -Force
 
     Write-Host "Published: $destination"

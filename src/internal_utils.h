@@ -1,7 +1,7 @@
 #ifndef CLC_INTERNAL_UTILS_H
 #define CLC_INTERNAL_UTILS_H
 
-#include <codelinecalculator/compiler.h>
+#include <cloc/compiler.h>
 
 #include <stddef.h>
 #include <string.h>
@@ -9,7 +9,7 @@
 #define CLC_ARRAY_COUNT(values) (sizeof(values) / sizeof((values)[0]))
 
 static inline int clc_path_is_separator(char value) {
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
     return value == '\\' || value == '/';
 #else
     return value == '/';

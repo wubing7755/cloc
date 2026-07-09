@@ -1,6 +1,6 @@
-# CodeLineCalculator
+# Cloc
 
-CodeLineCalculator is a C11 command-line tool for counting source lines in a
+Cloc is a C11 command-line tool for counting source lines in a
 project directory. It is intended for cases such as software copyright
 registration forms where a total source-code line count is required.
 
@@ -9,49 +9,49 @@ registration forms where a total source-code line count is required.
 Build the project, then run:
 
 ```sh
-codelinecalculator <absolute-project-path> [--preset <name>]
-codelinecalculator <absolute-project-path> [suffix...]
-codelinecalculator --interactive
-codelinecalculator --list-presets
-codelinecalculator --help
+cloc <absolute-project-path> [--preset <name>]
+cloc <absolute-project-path> [suffix...]
+cloc --interactive
+cloc --list-presets
+cloc --help
 ```
 
 Examples:
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe C:\work\my-project
+.\build\ninja-debug\bin\cloc.exe C:\work\my-project
 ```
 
 Use a preset for a project type:
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe C:\work\my-project --preset web
+.\build\ninja-debug\bin\cloc.exe C:\work\my-project --preset web
 ```
 
 Run interactively:
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe --interactive
+.\build\ninja-debug\bin\cloc.exe --interactive
 ```
 
 Show help:
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe help
+.\build\ninja-debug\bin\cloc.exe help
 ```
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe C:\work\my-project "*.c" "*.h" "*.js" "*.ts" "*.cs" "*.razor" "*.css"
+.\build\ninja-debug\bin\cloc.exe C:\work\my-project "*.c" "*.h" "*.js" "*.ts" "*.cs" "*.razor" "*.css"
 ```
 
 ```sh
-./build/ninja-debug/bin/codelinecalculator /home/me/my-project c h cpp js ts cs razor css
+./build/ninja-debug/bin/cloc /home/me/my-project c h cpp js ts cs razor css
 ```
 
 List available presets:
 
 ```powershell
-.\build\ninja-debug\bin\codelinecalculator.exe --list-presets
+.\build\ninja-debug\bin\cloc.exe --list-presets
 ```
 
 Built-in presets:
@@ -84,13 +84,13 @@ directory:
 **Windows PowerShell**
 
 ```powershell
-.\scripts\publish.ps1 C:\tools\CodeLineCalculator
+.\scripts\publish.ps1 C:\tools\Cloc
 ```
 
 **Linux/macOS or MSYS2/Git Bash**
 
 ```sh
-./scripts/publish.sh /opt/codelinecalculator
+./scripts/publish.sh /opt/cloc
 ```
 
 If no output directory is provided, the executable is copied to the repository
@@ -218,8 +218,8 @@ errors, see [doc/guides/cmake.md](doc/guides/cmake.md).
 The install rules generate a CMake package config:
 
 ```cmake
-find_package(CodeLineCalculator CONFIG REQUIRED)
-target_link_libraries(app PRIVATE CodeLineCalculator::codelinecalculator_core)
+find_package(Cloc CONFIG REQUIRED)
+target_link_libraries(app PRIVATE Cloc::cloc_core)
 ```
 
 The `tests/package_smoke/` project validates installed C and C++ consumers.

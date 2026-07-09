@@ -70,16 +70,16 @@ esac
 cd "$REPO_ROOT"
 
 cmake --preset "$PRESET"
-cmake --build --preset "$PRESET" --target codelinecalculator
+cmake --build --preset "$PRESET" --target cloc
 
-EXE_PATH="$REPO_ROOT/build/$PRESET/bin/codelinecalculator$EXE_SUFFIX"
+EXE_PATH="$REPO_ROOT/build/$PRESET/bin/cloc$EXE_SUFFIX"
 if [ ! -f "$EXE_PATH" ]; then
   echo "ERROR: built executable was not found: $EXE_PATH" >&2
   exit 1
 fi
 
 mkdir -p "$OUTPUT_DIR"
-DESTINATION="$OUTPUT_DIR/codelinecalculator$EXE_SUFFIX"
+DESTINATION="$OUTPUT_DIR/cloc$EXE_SUFFIX"
 cp "$EXE_PATH" "$DESTINATION"
 
 echo "Published: $DESTINATION"

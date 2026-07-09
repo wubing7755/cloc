@@ -176,18 +176,18 @@ write `compile_commands.json` into the preset build directory.
 These options can be passed during configure:
 
 ```sh
-cmake --preset ninja-debug -DCODELINECALCULATOR_BUILD_CLI=OFF
+cmake --preset ninja-debug -DCLOC_BUILD_CLI=OFF
 ```
 
 | Option | Meaning |
 | --- | --- |
 | `BUILD_SHARED_LIBS` | Builds libraries as shared libraries when supported. |
-| `CODELINECALCULATOR_BUILD_CLI` | Builds `src/main.c` as the command-line executable. |
-| `CODELINECALCULATOR_BUILD_TESTING` | Builds CTest test targets. |
-| `CODELINECALCULATOR_INSTALL` | Generates install rules. |
-| `CODELINECALCULATOR_ENABLE_ASAN` | Enables AddressSanitizer where supported. |
-| `CODELINECALCULATOR_ENABLE_UBSAN` | Enables UndefinedBehaviorSanitizer where supported. |
-| `CODELINECALCULATOR_ENABLE_COVERAGE` | Enables coverage flags where supported. |
+| `CLOC_BUILD_CLI` | Builds `src/main.c` as the command-line executable. |
+| `CLOC_BUILD_TESTING` | Builds CTest test targets. |
+| `CLOC_INSTALL` | Generates install rules. |
+| `CLOC_ENABLE_ASAN` | Enables AddressSanitizer where supported. |
+| `CLOC_ENABLE_UBSAN` | Enables UndefinedBehaviorSanitizer where supported. |
+| `CLOC_ENABLE_COVERAGE` | Enables coverage flags where supported. |
 
 The CLI, tests, and install rules default to on for top-level builds. They
 default to off when this project is included through `add_subdirectory()`.
@@ -238,12 +238,12 @@ headers by relative filesystem paths.
 
 ## Add A Source File
 
-Add implementation files under `src/codelinecalculator/` and public headers under
-`include/codelinecalculator/`.
+Add implementation files under `src/cloc/` and public headers under
+`include/cloc/`.
 
-1. Create the `.c` file under `src/codelinecalculator/`.
-2. Create or update the matching public header under `include/codelinecalculator/`.
-3. Add the new `.c` file to `CODELINECALCULATOR_CORE_SOURCES` in `cmake/Sources.cmake`.
+1. Create the `.c` file under `src/cloc/`.
+2. Create or update the matching public header under `include/cloc/`.
+3. Add the new `.c` file to `CLOC_CORE_SOURCES` in `cmake/Sources.cmake`.
 4. Add tests under `tests/`.
 5. Run `./scripts/check.ps1` or `./scripts/check.sh`.
 
@@ -252,14 +252,14 @@ C++ callers when they expose C APIs.
 
 ## Add A Test
 
-Use `codelinecalculator_add_test()` from `cmake/Tests.cmake`:
+Use `cloc_add_test()` from `cmake/Tests.cmake`:
 
 ```cmake
-codelinecalculator_add_test(codelinecalculator_feature_tests
+cloc_add_test(cloc_feature_tests
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_feature.c
     LIBS
-        codelinecalculator_core
+        cloc_core
 )
 ```
 
@@ -292,8 +292,8 @@ cmake --install build/ninja-release --config Release --prefix install
 A downstream CMake project can then consume it:
 
 ```cmake
-find_package(CodeLineCalculator CONFIG REQUIRED)
-target_link_libraries(app PRIVATE CodeLineCalculator::codelinecalculator_core)
+find_package(Cloc CONFIG REQUIRED)
+target_link_libraries(app PRIVATE Cloc::cloc_core)
 ```
 
 The package smoke project validates this path:
@@ -348,8 +348,8 @@ CMake exposes it through the installed target metadata.
 Projects can also consume this repository directly:
 
 ```cmake
-add_subdirectory(path/to/CodeLineCalculator)
-target_link_libraries(app PRIVATE CodeLineCalculator::codelinecalculator_core)
+add_subdirectory(path/to/Cloc)
+target_link_libraries(app PRIVATE Cloc::cloc_core)
 ```
 
 The subproject smoke test validates this mode:
@@ -357,7 +357,7 @@ The subproject smoke test validates this mode:
 **Linux/macOS**
 
 ```sh
-cmake -G Ninja -S tests/subproject_smoke -B build/subproject-smoke -DCODELINECALCULATOR_SOURCE_DIR="$PWD"
+cmake -G Ninja -S tests/subproject_smoke -B build/subproject-smoke -DCLOC_SOURCE_DIR="$PWD"
 cmake --build build/subproject-smoke --config Debug
 ctest --test-dir build/subproject-smoke -C Debug --output-on-failure
 ```
@@ -365,7 +365,7 @@ ctest --test-dir build/subproject-smoke -C Debug --output-on-failure
 **Windows PowerShell**
 
 ```powershell
-cmake -G Ninja -S tests/subproject_smoke -B build/subproject-smoke -DCODELINECALCULATOR_SOURCE_DIR="$PWD"
+cmake -G Ninja -S tests/subproject_smoke -B build/subproject-smoke -DCLOC_SOURCE_DIR="$PWD"
 cmake --build build/subproject-smoke --config Debug
 ctest --test-dir build/subproject-smoke -C Debug --output-on-failure
 ```
@@ -378,10 +378,10 @@ off. A downstream project can enable them explicitly if needed.
 The project version is declared once:
 
 ```cmake
-project(CodeLineCalculator VERSION 0.1.0 LANGUAGES C)
+project(Cloc VERSION 0.1.0 LANGUAGES C)
 ```
 
-CMake generates `codelinecalculator/version.h` from that value. Source files should use the
+CMake generates `cloc/version.h` from that value. Source files should use the
 generated macros instead of duplicating literal version numbers.
 
 ## Local Quality Checks
@@ -422,18 +422,18 @@ as the authoritative check for those tools.
 ## Publish The CLI
 
 Use the publish scripts to create a release build and copy the
-`codelinecalculator` executable to a chosen output directory:
+`cloc` executable to a chosen output directory:
 
 **Windows PowerShell**
 
 ```powershell
-./scripts/publish.ps1 C:\tools\CodeLineCalculator
+./scripts/publish.ps1 C:\tools\Cloc
 ```
 
 **Linux/macOS or MSYS2/Git Bash**
 
 ```sh
-./scripts/publish.sh /opt/codelinecalculator
+./scripts/publish.sh /opt/cloc
 ```
 
 When no output directory is provided, the executable is copied to the repository
@@ -465,9 +465,9 @@ VS Code builds `ALL_BUILD` with Ninja:
   still cached, run `CMake: Reset CMake Tools Extension State`, then
   `CMake: Delete Cache and Reconfigure`.
 
-`find_package(CodeLineCalculator)` cannot find the package:
+`find_package(Cloc)` cannot find the package:
 
-- Symptom: CMake cannot find `CodeLineCalculatorConfig.cmake`.
+- Symptom: CMake cannot find `ClocConfig.cmake`.
 - Fix: install the project first and pass the absolute install prefix with
   `-DCMAKE_PREFIX_PATH=/path/to/install`.
 
