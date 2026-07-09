@@ -50,6 +50,7 @@ target_compile_features(cloc_core PUBLIC c_std_11)
 target_compile_definitions(cloc_core
     PRIVATE
         CLOC_BUILDING_LIBRARY
+        $<$<NOT:$<BOOL:${MSVC}>>:_POSIX_C_SOURCE=200809L>
 )
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(cloc_core PUBLIC CLOC_SHARED)
