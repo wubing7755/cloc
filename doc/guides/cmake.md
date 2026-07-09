@@ -292,8 +292,8 @@ cmake --install build/ninja-release --config Release --prefix install
 A downstream CMake project can then consume it:
 
 ```cmake
-find_package(Cloc CONFIG REQUIRED)
-target_link_libraries(app PRIVATE Cloc::cloc_core)
+find_package(cloc CONFIG REQUIRED)
+target_link_libraries(app PRIVATE cloc::cloc_core)
 ```
 
 The package smoke project validates this path:
@@ -348,8 +348,8 @@ CMake exposes it through the installed target metadata.
 Projects can also consume this repository directly:
 
 ```cmake
-add_subdirectory(path/to/Cloc)
-target_link_libraries(app PRIVATE Cloc::cloc_core)
+add_subdirectory(path/to/cloc)
+target_link_libraries(app PRIVATE cloc::cloc_core)
 ```
 
 The subproject smoke test validates this mode:
@@ -378,7 +378,7 @@ off. A downstream project can enable them explicitly if needed.
 The project version is declared once:
 
 ```cmake
-project(Cloc VERSION 0.1.0 LANGUAGES C)
+project(cloc VERSION 0.1.0 LANGUAGES C)
 ```
 
 CMake generates `cloc/version.h` from that value. Source files should use the
@@ -427,7 +427,7 @@ Use the publish scripts to create a release build and copy the
 **Windows PowerShell**
 
 ```powershell
-./scripts/publish.ps1 C:\tools\Cloc
+./scripts/publish.ps1 C:\tools\cloc
 ```
 
 **Linux/macOS or MSYS2/Git Bash**
@@ -465,9 +465,9 @@ VS Code builds `ALL_BUILD` with Ninja:
   still cached, run `CMake: Reset CMake Tools Extension State`, then
   `CMake: Delete Cache and Reconfigure`.
 
-`find_package(Cloc)` cannot find the package:
+`find_package(cloc)` cannot find the package:
 
-- Symptom: CMake cannot find `ClocConfig.cmake`.
+- Symptom: CMake cannot find `clocConfig.cmake`.
 - Fix: install the project first and pass the absolute install prefix with
   `-DCMAKE_PREFIX_PATH=/path/to/install`.
 

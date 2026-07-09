@@ -1,6 +1,6 @@
 # Engineering Standard
 
-This document records the engineering baseline for Cloc.
+This document records the engineering baseline for cloc.
 
 ## Principles
 
