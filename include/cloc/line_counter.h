@@ -1,7 +1,7 @@
-#ifndef CODELINECALCULATOR_LINE_COUNTER_H
-#define CODELINECALCULATOR_LINE_COUNTER_H
+#ifndef CLOC_LINE_COUNTER_H
+#define CLOC_LINE_COUNTER_H
 
-#include <codelinecalculator/export.h>
+#include <cloc/export.h>
 
 #include <stddef.h>
 
@@ -9,13 +9,13 @@
 extern "C" {
 #endif
 
-typedef enum CodeLineCalculatorStatus {
-    CODELINECALCULATOR_STATUS_OK = 0,
-    CODELINECALCULATOR_STATUS_INVALID_ARGUMENT = 1,
-    CODELINECALCULATOR_STATUS_OUT_OF_MEMORY = 2,
-    CODELINECALCULATOR_STATUS_IO_ERROR = 3,
-    CODELINECALCULATOR_STATUS_OVERFLOW = 4
-} CodeLineCalculatorStatus;
+typedef enum ClocStatus {
+    CLOC_STATUS_OK = 0,
+    CLOC_STATUS_INVALID_ARGUMENT = 1,
+    CLOC_STATUS_OUT_OF_MEMORY = 2,
+    CLOC_STATUS_IO_ERROR = 3,
+    CLOC_STATUS_OVERFLOW = 4
+} ClocStatus;
 
 /*
  * Scan options for a source-line count.
@@ -23,11 +23,11 @@ typedef enum CodeLineCalculatorStatus {
  * root_path must point at the project directory to scan. Suffix entries may be
  * written as "c", ".c", or "*.c"; matching is case-insensitive.
  */
-typedef struct CodeLineCalculatorScanOptions {
+typedef struct ClocScanOptions {
     const char *root_path;
     const char *const *suffixes;
     size_t suffix_count;
-} CodeLineCalculatorScanOptions;
+} ClocScanOptions;
 
 /*
  * Physical-line count result.
@@ -35,13 +35,13 @@ typedef struct CodeLineCalculatorScanOptions {
  * total_lines includes blank and comment lines. Empty files contribute zero
  * lines; a non-empty final line without a trailing newline is counted.
  */
-typedef struct CodeLineCalculatorScanResult {
+typedef struct ClocScanResult {
     unsigned long long total_lines;
     unsigned long long matched_files;
     unsigned long long visited_files;
     unsigned long long skipped_directories;
     unsigned long long failed_entries;
-} CodeLineCalculatorScanResult;
+} ClocScanResult;
 
 /*
  * Recursively count source lines under options->root_path.
@@ -49,14 +49,13 @@ typedef struct CodeLineCalculatorScanResult {
  * Common VCS, dependency, and build-output directories are skipped. Unreadable
  * non-root entries increment failed_entries and scanning continues.
  */
-CODELINECALCULATOR_API CodeLineCalculatorStatus codelinecalculator_count_source_lines(
-    const CodeLineCalculatorScanOptions *options, CodeLineCalculatorScanResult *result);
+CLOC_API ClocStatus cloc_count_source_lines(const ClocScanOptions *options, ClocScanResult *result);
 
 /* Return a stable English label for a status value. */
-CODELINECALCULATOR_API const char *codelinecalculator_status_name(CodeLineCalculatorStatus status);
+CLOC_API const char *cloc_status_name(ClocStatus status);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* CODELINECALCULATOR_LINE_COUNTER_H */
+#endif /* CLOC_LINE_COUNTER_H */

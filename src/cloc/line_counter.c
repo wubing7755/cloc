@@ -1,10 +1,10 @@
-#include <codelinecalculator/line_counter.h>
+#include <cloc/line_counter.h>
 
-#include <codelinecalculator/compiler.h>
+#include <cloc/compiler.h>
 
 #include "../internal_utils.h"
 
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -23,8 +23,8 @@
 #include <string.h>
 
 typedef struct ScanContext {
-    const CodeLineCalculatorScanOptions *options;
-    CodeLineCalculatorScanResult *result;
+    const ClocScanOptions *options;
+    ClocScanResult *result;
 } ScanContext;
 
 static int is_dot_directory(const char *name) {
@@ -84,7 +84,7 @@ static char *join_path(const char *directory, const char *name) {
 
     memcpy(path, directory, directory_length);
     if (needs_separator) {
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
         path[directory_length] = '\\';
 #else
         path[directory_length] = '/';
@@ -131,7 +131,7 @@ static int path_matches_suffix(const char *path, const char *suffix) {
                                          suffix_length);
 }
 
-static int path_matches_any_suffix(const char *path, const CodeLineCalculatorScanOptions *options) {
+static int path_matches_any_suffix(const char *path, const ClocScanOptions *options) {
     size_t index = 0;
     for (index = 0; index < options->suffix_count; ++index) {
         if (path_matches_suffix(path, options->suffixes[index])) {
@@ -141,7 +141,7 @@ static int path_matches_any_suffix(const char *path, const CodeLineCalculatorSca
     return 0;
 }
 
-static CodeLineCalculatorStatus count_file_lines(const char *path, unsigned long long *line_count) {
+static ClocStatus count_file_lines(const char *path, unsigned long long *line_count) {
     FILE *file = fopen(path, "rb");
     int saw_any_byte = 0;
     int last_was_newline = 1;
@@ -150,7 +150,7 @@ static CodeLineCalculatorStatus count_file_lines(const char *path, unsigned long
     *line_count = 0U;
 
     if (!file) {
-        return CODELINECALCULATOR_STATUS_IO_ERROR;
+        return CLOC_STATUS_IO_ERROR;
     }
 
     while ((ch = fgetc(file)) != EOF) {
@@ -158,7 +158,7 @@ static CodeLineCalculatorStatus count_file_lines(const char *path, unsigned long
         if (ch == '\n') {
             if (!add_ull(line_count, 1U)) {
                 (void)fclose(file);
-                return CODELINECALCULATOR_STATUS_OVERFLOW;
+                return CLOC_STATUS_OVERFLOW;
             }
             last_was_newline = 1;
         } else {
@@ -168,64 +168,62 @@ static CodeLineCalculatorStatus count_file_lines(const char *path, unsigned long
 
     if (ferror(file)) {
         (void)fclose(file);
-        return CODELINECALCULATOR_STATUS_IO_ERROR;
+        return CLOC_STATUS_IO_ERROR;
     }
 
     if (fclose(file) != 0) {
-        return CODELINECALCULATOR_STATUS_IO_ERROR;
+        return CLOC_STATUS_IO_ERROR;
     }
 
     if (saw_any_byte && !last_was_newline && !add_ull(line_count, 1U)) {
-        return CODELINECALCULATOR_STATUS_OVERFLOW;
+        return CLOC_STATUS_OVERFLOW;
     }
 
-    return CODELINECALCULATOR_STATUS_OK;
+    return CLOC_STATUS_OK;
 }
 
-static CodeLineCalculatorStatus visit_file(const char *path, ScanContext *context) {
+static ClocStatus visit_file(const char *path, ScanContext *context) {
     unsigned long long file_lines = 0U;
-    CodeLineCalculatorStatus status = CODELINECALCULATOR_STATUS_OK;
-    CodeLineCalculatorScanResult *result = context->result;
+    ClocStatus status = CLOC_STATUS_OK;
+    ClocScanResult *result = context->result;
 
     if (!add_ull(&result->visited_files, 1U)) {
-        return CODELINECALCULATOR_STATUS_OVERFLOW;
+        return CLOC_STATUS_OVERFLOW;
     }
 
     if (!path_matches_any_suffix(path, context->options)) {
-        return CODELINECALCULATOR_STATUS_OK;
+        return CLOC_STATUS_OK;
     }
 
     status = count_file_lines(path, &file_lines);
-    if (status == CODELINECALCULATOR_STATUS_IO_ERROR) {
+    if (status == CLOC_STATUS_IO_ERROR) {
         if (!add_ull(&result->failed_entries, 1U)) {
-            return CODELINECALCULATOR_STATUS_OVERFLOW;
+            return CLOC_STATUS_OVERFLOW;
         }
-        return CODELINECALCULATOR_STATUS_OK;
+        return CLOC_STATUS_OK;
     }
-    if (status != CODELINECALCULATOR_STATUS_OK) {
+    if (status != CLOC_STATUS_OK) {
         return status;
     }
 
     if (!add_ull(&result->matched_files, 1U) || !add_ull(&result->total_lines, file_lines)) {
-        return CODELINECALCULATOR_STATUS_OVERFLOW;
+        return CLOC_STATUS_OVERFLOW;
     }
 
-    return CODELINECALCULATOR_STATUS_OK;
+    return CLOC_STATUS_OK;
 }
 
-static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root);
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root);
 
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
-static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root) {
+#if CLOC_PLATFORM_WINDOWS
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root) {
     WIN32_FIND_DATAA find_data;
     HANDLE find_handle = INVALID_HANDLE_VALUE;
     char *pattern = join_path(directory, "*");
-    CodeLineCalculatorStatus status = CODELINECALCULATOR_STATUS_OK;
+    ClocStatus status = CLOC_STATUS_OK;
 
     if (!pattern) {
-        return CODELINECALCULATOR_STATUS_OUT_OF_MEMORY;
+        return CLOC_STATUS_OUT_OF_MEMORY;
     }
 
     find_handle = FindFirstFileA(pattern, &find_data);
@@ -233,12 +231,12 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
     if (find_handle == INVALID_HANDLE_VALUE) {
         if (is_root) {
-            return CODELINECALCULATOR_STATUS_IO_ERROR;
+            return CLOC_STATUS_IO_ERROR;
         }
         if (!add_ull(&context->result->failed_entries, 1U)) {
-            return CODELINECALCULATOR_STATUS_OVERFLOW;
+            return CLOC_STATUS_OVERFLOW;
         }
-        return CODELINECALCULATOR_STATUS_OK;
+        return CLOC_STATUS_OK;
     }
 
     do {
@@ -253,7 +251,7 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
         if (is_directory && is_ignored_directory_name(name)) {
             if (!add_ull(&context->result->skipped_directories, 1U)) {
-                status = CODELINECALCULATOR_STATUS_OVERFLOW;
+                status = CLOC_STATUS_OVERFLOW;
                 break;
             }
             continue;
@@ -261,7 +259,7 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
         child_path = join_path(directory, name);
         if (!child_path) {
-            status = CODELINECALCULATOR_STATUS_OUT_OF_MEMORY;
+            status = CLOC_STATUS_OUT_OF_MEMORY;
             break;
         }
 
@@ -269,7 +267,7 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
             if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) ==
                 FILE_ATTRIBUTE_REPARSE_POINT) {
                 if (!add_ull(&context->result->skipped_directories, 1U)) {
-                    status = CODELINECALCULATOR_STATUS_OVERFLOW;
+                    status = CLOC_STATUS_OVERFLOW;
                 }
             } else {
                 status = walk_directory(child_path, context, 0);
@@ -280,14 +278,14 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
         free(child_path);
 
-        if (status != CODELINECALCULATOR_STATUS_OK) {
+        if (status != CLOC_STATUS_OK) {
             break;
         }
     } while (FindNextFileA(find_handle, &find_data) != 0);
 
-    if (status == CODELINECALCULATOR_STATUS_OK && GetLastError() != ERROR_NO_MORE_FILES) {
+    if (status == CLOC_STATUS_OK && GetLastError() != ERROR_NO_MORE_FILES) {
         if (!add_ull(&context->result->failed_entries, 1U)) {
-            status = CODELINECALCULATOR_STATUS_OVERFLOW;
+            status = CLOC_STATUS_OVERFLOW;
         }
     }
 
@@ -295,20 +293,19 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
     return status;
 }
 #else
-static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root) {
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root) {
     DIR *dir = opendir(directory);
     struct dirent *entry = NULL;
-    CodeLineCalculatorStatus status = CODELINECALCULATOR_STATUS_OK;
+    ClocStatus status = CLOC_STATUS_OK;
 
     if (!dir) {
         if (is_root) {
-            return CODELINECALCULATOR_STATUS_IO_ERROR;
+            return CLOC_STATUS_IO_ERROR;
         }
         if (!add_ull(&context->result->failed_entries, 1U)) {
-            return CODELINECALCULATOR_STATUS_OVERFLOW;
+            return CLOC_STATUS_OVERFLOW;
         }
-        return CODELINECALCULATOR_STATUS_OK;
+        return CLOC_STATUS_OK;
     }
 
     while ((entry = readdir(dir)) != NULL) {
@@ -321,16 +318,16 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
         child_path = join_path(directory, entry->d_name);
         if (!child_path) {
-            status = CODELINECALCULATOR_STATUS_OUT_OF_MEMORY;
+            status = CLOC_STATUS_OUT_OF_MEMORY;
             break;
         }
 
         if (lstat(child_path, &child_stat) != 0) {
             if (!add_ull(&context->result->failed_entries, 1U)) {
-                status = CODELINECALCULATOR_STATUS_OVERFLOW;
+                status = CLOC_STATUS_OVERFLOW;
             }
             free(child_path);
-            if (status != CODELINECALCULATOR_STATUS_OK) {
+            if (status != CLOC_STATUS_OK) {
                 break;
             }
             continue;
@@ -339,7 +336,7 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
         if (S_ISDIR(child_stat.st_mode)) {
             if (is_ignored_directory_name(entry->d_name)) {
                 if (!add_ull(&context->result->skipped_directories, 1U)) {
-                    status = CODELINECALCULATOR_STATUS_OVERFLOW;
+                    status = CLOC_STATUS_OVERFLOW;
                 }
             } else {
                 status = walk_directory(child_path, context, 0);
@@ -350,14 +347,14 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 
         free(child_path);
 
-        if (status != CODELINECALCULATOR_STATUS_OK) {
+        if (status != CLOC_STATUS_OK) {
             break;
         }
     }
 
-    if (closedir(dir) != 0 && status == CODELINECALCULATOR_STATUS_OK) {
+    if (closedir(dir) != 0 && status == CLOC_STATUS_OK) {
         if (!add_ull(&context->result->failed_entries, 1U)) {
-            status = CODELINECALCULATOR_STATUS_OVERFLOW;
+            status = CLOC_STATUS_OVERFLOW;
         }
     }
 
@@ -365,7 +362,7 @@ static CodeLineCalculatorStatus walk_directory(const char *directory, ScanContex
 }
 #endif
 
-static int scan_options_are_valid(const CodeLineCalculatorScanOptions *options) {
+static int scan_options_are_valid(const ClocScanOptions *options) {
     size_t index = 0;
 
     if (!options || !options->root_path || options->root_path[0] == '\0' || !options->suffixes ||
@@ -382,19 +379,17 @@ static int scan_options_are_valid(const CodeLineCalculatorScanOptions *options) 
     return 1;
 }
 
-CodeLineCalculatorStatus
-codelinecalculator_count_source_lines(const CodeLineCalculatorScanOptions *options,
-                                      CodeLineCalculatorScanResult *result) {
+ClocStatus cloc_count_source_lines(const ClocScanOptions *options, ClocScanResult *result) {
     ScanContext context;
 
     if (!result) {
-        return CODELINECALCULATOR_STATUS_INVALID_ARGUMENT;
+        return CLOC_STATUS_INVALID_ARGUMENT;
     }
 
     memset(result, 0, sizeof(*result));
 
     if (!scan_options_are_valid(options)) {
-        return CODELINECALCULATOR_STATUS_INVALID_ARGUMENT;
+        return CLOC_STATUS_INVALID_ARGUMENT;
     }
 
     context.options = options;
@@ -402,17 +397,17 @@ codelinecalculator_count_source_lines(const CodeLineCalculatorScanOptions *optio
     return walk_directory(options->root_path, &context, 1);
 }
 
-const char *codelinecalculator_status_name(CodeLineCalculatorStatus status) {
+const char *cloc_status_name(ClocStatus status) {
     switch (status) {
-    case CODELINECALCULATOR_STATUS_OK:
+    case CLOC_STATUS_OK:
         return "ok";
-    case CODELINECALCULATOR_STATUS_INVALID_ARGUMENT:
+    case CLOC_STATUS_INVALID_ARGUMENT:
         return "invalid argument";
-    case CODELINECALCULATOR_STATUS_OUT_OF_MEMORY:
+    case CLOC_STATUS_OUT_OF_MEMORY:
         return "out of memory";
-    case CODELINECALCULATOR_STATUS_IO_ERROR:
+    case CLOC_STATUS_IO_ERROR:
         return "I/O error";
-    case CODELINECALCULATOR_STATUS_OVERFLOW:
+    case CLOC_STATUS_OVERFLOW:
         return "numeric overflow";
     default:
         return "unknown status";

@@ -1,6 +1,6 @@
 #include "cli_options.h"
 
-#include <codelinecalculator/source_preset.h>
+#include <cloc/source_preset.h>
 
 #include "internal_utils.h"
 
@@ -40,7 +40,7 @@ static int is_absolute_path(const char *path) {
         return 0;
     }
 
-#if CODELINECALCULATOR_PLATFORM_WINDOWS
+#if CLOC_PLATFORM_WINDOWS
     if (path[1] != '\0' && path[2] != '\0' && clc_ascii_is_alpha(path[0]) && path[1] == ':' &&
         clc_path_is_separator(path[2])) {
         return 1;
@@ -117,7 +117,7 @@ static const char *display_program_name(const char *program_name) {
     size_t index = 0U;
 
     if (!program_name || program_name[0] == '\0') {
-        return "codelinecalculator";
+        return "cloc";
     }
 
     while (program_name[index] != '\0') {
@@ -127,13 +127,13 @@ static const char *display_program_name(const char *program_name) {
         ++index;
     }
 
-    return display_name[0] == '\0' ? "codelinecalculator" : display_name;
+    return display_name[0] == '\0' ? "cloc" : display_name;
 }
 
 static void print_usage(FILE *stream, const char *program_name) {
     const char *name = display_program_name(program_name);
 
-    fprintf(stream, "CodeLineCalculator - count source-code lines in a project.\n\n");
+    fprintf(stream, "Cloc - count source-code lines in a project.\n\n");
     fprintf(stream, "Quick start:\n");
     fprintf(stream, "  %s C:\\work\\project\n", name);
     fprintf(stream, "  %s --interactive\n\n", name);
@@ -163,7 +163,7 @@ static void print_usage(FILE *stream, const char *program_name) {
 static void print_presets(FILE *stream) {
     size_t count = 0U;
     size_t index = 0U;
-    const CodeLineCalculatorSourcePreset *presets = codelinecalculator_source_presets(&count);
+    const ClocSourcePreset *presets = cloc_source_presets(&count);
 
     fprintf(stream, "Available presets:\n");
     for (index = 0U; index < count; ++index) {
@@ -173,7 +173,7 @@ static void print_presets(FILE *stream) {
     fprintf(stream, "  %zu. custom  Custom suffix list\n", count + 1U);
 }
 
-static void select_preset(CliOptions *options, const CodeLineCalculatorSourcePreset *preset) {
+static void select_preset(CliOptions *options, const ClocSourcePreset *preset) {
     options->selection_name = preset->name;
     options->suffixes = preset->suffixes;
     options->suffix_count = preset->suffix_count;
@@ -314,11 +314,11 @@ static int configure_interactive_custom_suffixes(CliOptions *options) {
 
 static int configure_interactive_selection(CliOptions *options) {
     size_t count = 0U;
-    const CodeLineCalculatorSourcePreset *presets = codelinecalculator_source_presets(&count);
+    const ClocSourcePreset *presets = cloc_source_presets(&count);
     char input[CLI_INPUT_SIZE];
     char *choice = NULL;
     size_t choice_number = 0U;
-    const CodeLineCalculatorSourcePreset *preset = NULL;
+    const ClocSourcePreset *preset = NULL;
 
     printf("\nChoose source selection:\n");
     print_presets(stdout);
@@ -330,7 +330,7 @@ static int configure_interactive_selection(CliOptions *options) {
 
     choice = trim(input);
     if (choice[0] == '\0') {
-        select_preset(options, codelinecalculator_default_source_preset());
+        select_preset(options, cloc_default_source_preset());
         return 1;
     }
 
@@ -352,7 +352,7 @@ static int configure_interactive_selection(CliOptions *options) {
         return configure_interactive_custom_suffixes(options);
     }
 
-    preset = codelinecalculator_find_source_preset(choice);
+    preset = cloc_find_source_preset(choice);
     if (!preset) {
         fprintf(stderr, "Unknown preset: %s\n", choice);
         return 0;
@@ -363,7 +363,7 @@ static int configure_interactive_selection(CliOptions *options) {
 }
 
 static CliParseResult configure_interactive(CliOptions *options) {
-    printf("CodeLineCalculator interactive mode\n\n");
+    printf("Cloc interactive mode\n\n");
 
     if (!configure_interactive_path(options)) {
         return CLI_PARSE_EXIT_FAILURE;
@@ -377,14 +377,14 @@ static CliParseResult configure_interactive(CliOptions *options) {
 }
 
 CliParseResult cli_parse_options(int argc, char **argv, CliOptions *options) {
-    const CodeLineCalculatorSourcePreset *preset = NULL;
+    const ClocSourcePreset *preset = NULL;
 
     if (!options || argc < 1 || !argv || !argv[0]) {
         return CLI_PARSE_EXIT_FAILURE;
     }
 
     memset(options, 0, sizeof(*options));
-    select_preset(options, codelinecalculator_default_source_preset());
+    select_preset(options, cloc_default_source_preset());
 
     if (argc == 2 && is_help_argument(argv[1])) {
         print_usage(stdout, argv[0]);
@@ -425,7 +425,7 @@ CliParseResult cli_parse_options(int argc, char **argv, CliOptions *options) {
             return CLI_PARSE_EXIT_FAILURE;
         }
 
-        preset = codelinecalculator_find_source_preset(argv[3]);
+        preset = cloc_find_source_preset(argv[3]);
         if (!preset) {
             fprintf(stderr, "Unknown preset: %s\n", argv[3]);
             print_presets(stderr);

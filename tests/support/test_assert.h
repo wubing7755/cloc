@@ -1,5 +1,5 @@
-#ifndef CODELINECALCULATOR_TEST_ASSERT_H
-#define CODELINECALCULATOR_TEST_ASSERT_H
+#ifndef CLOC_TEST_ASSERT_H
+#define CLOC_TEST_ASSERT_H
 
 #include <stdio.h>
 
@@ -37,10 +37,8 @@ static inline int ct_expect_ull_eq(unsigned long long actual, unsigned long long
     return 1;
 }
 
-#define CODELINECALCULATOR_EXPECT_TRUE(e) ct_expect_true((e), #e, __FILE__, __LINE__)
-#define CODELINECALCULATOR_EXPECT_INT_EQ(a, e)                                                     \
-    ct_expect_int_eq((a), (e), #a, #e, __FILE__, __LINE__)
-#define CODELINECALCULATOR_EXPECT_ULL_EQ(a, e)                                                     \
-    ct_expect_ull_eq((a), (e), #a, #e, __FILE__, __LINE__)
+#define CLOC_EXPECT_TRUE(e) ct_expect_true((e), #e, __FILE__, __LINE__)
+#define CLOC_EXPECT_INT_EQ(a, e) ct_expect_int_eq((a), (e), #a, #e, __FILE__, __LINE__)
+#define CLOC_EXPECT_ULL_EQ(a, e) ct_expect_ull_eq((a), (e), #a, #e, __FILE__, __LINE__)
 
-#endif /* CODELINECALCULATOR_TEST_ASSERT_H */
+#endif /* CLOC_TEST_ASSERT_H */

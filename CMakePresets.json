@@ -65,8 +65,8 @@
       "displayName": "Ninja AddressSanitizer",
       "inherits": "ninja-debug",
       "cacheVariables": {
-        "CODELINECALCULATOR_ENABLE_ASAN": "ON",
-        "CODELINECALCULATOR_ENABLE_UBSAN": "ON"
+        "CLOC_ENABLE_ASAN": "ON",
+        "CLOC_ENABLE_UBSAN": "ON"
       }
     },
     {
@@ -74,7 +74,7 @@
       "displayName": "Ninja Coverage",
       "inherits": "ninja-debug",
       "cacheVariables": {
-        "CODELINECALCULATOR_ENABLE_COVERAGE": "ON"
+        "CLOC_ENABLE_COVERAGE": "ON"
       }
     },
     {
@@ -92,8 +92,8 @@
       "inherits": "debug",
       "binaryDir": "${sourceDir}/build/asan",
       "cacheVariables": {
-        "CODELINECALCULATOR_ENABLE_ASAN": "ON",
-        "CODELINECALCULATOR_ENABLE_UBSAN": "ON"
+        "CLOC_ENABLE_ASAN": "ON",
+        "CLOC_ENABLE_UBSAN": "ON"
       }
     },
     {
@@ -102,7 +102,7 @@
       "inherits": "debug",
       "binaryDir": "${sourceDir}/build/coverage",
       "cacheVariables": {
-        "CODELINECALCULATOR_ENABLE_COVERAGE": "ON"
+        "CLOC_ENABLE_COVERAGE": "ON"
       }
     }
   ],
