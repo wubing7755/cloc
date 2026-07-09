@@ -49,8 +49,7 @@ typedef struct ClocScanResult {
  * Common VCS, dependency, and build-output directories are skipped. Unreadable
  * non-root entries increment failed_entries and scanning continues.
  */
-CLOC_API ClocStatus cloc_count_source_lines(
-    const ClocScanOptions *options, ClocScanResult *result);
+CLOC_API ClocStatus cloc_count_source_lines(const ClocScanOptions *options, ClocScanResult *result);
 
 /* Return a stable English label for a status value. */
 CLOC_API const char *cloc_status_name(ClocStatus status);

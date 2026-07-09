@@ -165,19 +165,17 @@ static int test_invalid_arguments(void) {
     ClocScanOptions options = {"", suffixes, 1U};
 
     if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(NULL, &result),
-                                          (int)CLOC_STATUS_INVALID_ARGUMENT)) {
+                            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
-    if (!CLOC_EXPECT_INT_EQ(
-            (int)cloc_count_source_lines(&options, &result),
-            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(&options, &result),
+                            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
-    if (!CLOC_EXPECT_INT_EQ(
-            (int)cloc_count_source_lines(&options, NULL),
-            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(&options, NULL),
+                            (int)CLOC_STATUS_INVALID_ARGUMENT)) {
         return 1;
     }
 
@@ -198,9 +196,7 @@ static int test_counts_matching_suffixes(void) {
     options.suffixes = suffixes;
     options.suffix_count = 2U;
 
-    if (!CLOC_EXPECT_INT_EQ(
-            (int)cloc_count_source_lines(&options, &result),
-            (int)CLOC_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(&options, &result), (int)CLOC_STATUS_OK)) {
         return 1;
     }
 
@@ -234,9 +230,7 @@ static int test_counts_user_selected_suffix(void) {
     options.suffixes = suffixes;
     options.suffix_count = 1U;
 
-    if (!CLOC_EXPECT_INT_EQ(
-            (int)cloc_count_source_lines(&options, &result),
-            (int)CLOC_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(&options, &result), (int)CLOC_STATUS_OK)) {
         return 1;
     }
 
@@ -264,9 +258,7 @@ static int test_counts_wildcard_common_suffixes(void) {
     options.suffixes = suffixes;
     options.suffix_count = 5U;
 
-    if (!CLOC_EXPECT_INT_EQ(
-            (int)cloc_count_source_lines(&options, &result),
-            (int)CLOC_STATUS_OK)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cloc_count_source_lines(&options, &result), (int)CLOC_STATUS_OK)) {
         return 1;
     }
 

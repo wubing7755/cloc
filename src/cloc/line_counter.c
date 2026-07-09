@@ -213,12 +213,10 @@ static ClocStatus visit_file(const char *path, ScanContext *context) {
     return CLOC_STATUS_OK;
 }
 
-static ClocStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root);
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root);
 
 #if CLOC_PLATFORM_WINDOWS
-static ClocStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root) {
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root) {
     WIN32_FIND_DATAA find_data;
     HANDLE find_handle = INVALID_HANDLE_VALUE;
     char *pattern = join_path(directory, "*");
@@ -295,8 +293,7 @@ static ClocStatus walk_directory(const char *directory, ScanContext *context,
     return status;
 }
 #else
-static ClocStatus walk_directory(const char *directory, ScanContext *context,
-                                               int is_root) {
+static ClocStatus walk_directory(const char *directory, ScanContext *context, int is_root) {
     DIR *dir = opendir(directory);
     struct dirent *entry = NULL;
     ClocStatus status = CLOC_STATUS_OK;
@@ -382,9 +379,7 @@ static int scan_options_are_valid(const ClocScanOptions *options) {
     return 1;
 }
 
-ClocStatus
-cloc_count_source_lines(const ClocScanOptions *options,
-                                      ClocScanResult *result) {
+ClocStatus cloc_count_source_lines(const ClocScanOptions *options, ClocScanResult *result) {
     ScanContext context;
 
     if (!result) {

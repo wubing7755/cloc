@@ -352,7 +352,7 @@ static int configure_interactive_selection(CliOptions *options) {
         return configure_interactive_custom_suffixes(options);
     }
 
-    preset = ccloc_find_source_preset(choice);
+    preset = cloc_find_source_preset(choice);
     if (!preset) {
         fprintf(stderr, "Unknown preset: %s\n", choice);
         return 0;
@@ -425,7 +425,7 @@ CliParseResult cli_parse_options(int argc, char **argv, CliOptions *options) {
             return CLI_PARSE_EXIT_FAILURE;
         }
 
-        preset = ccloc_find_source_preset(argv[3]);
+        preset = cloc_find_source_preset(argv[3]);
         if (!preset) {
             fprintf(stderr, "Unknown preset: %s\n", argv[3]);
             print_presets(stderr);

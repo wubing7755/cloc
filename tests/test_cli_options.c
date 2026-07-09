@@ -17,15 +17,15 @@ static int test_help_commands_exit_successfully(void) {
     char *short_help_argv[] = {"cloc", "-h"};
 
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, help_argv, &options),
-                                          (int)CLI_PARSE_EXIT_SUCCESS)) {
+                            (int)CLI_PARSE_EXIT_SUCCESS)) {
         return 1;
     }
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, dash_help_argv, &options),
-                                          (int)CLI_PARSE_EXIT_SUCCESS)) {
+                            (int)CLI_PARSE_EXIT_SUCCESS)) {
         return 1;
     }
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, short_help_argv, &options),
-                                          (int)CLI_PARSE_EXIT_SUCCESS)) {
+                            (int)CLI_PARSE_EXIT_SUCCESS)) {
         return 1;
     }
 
@@ -37,7 +37,7 @@ static int test_list_presets_exits_successfully(void) {
     char *argv[] = {"cloc", "--list-presets"};
 
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, argv, &options),
-                                          (int)CLI_PARSE_EXIT_SUCCESS)) {
+                            (int)CLI_PARSE_EXIT_SUCCESS)) {
         return 1;
     }
 
@@ -48,8 +48,7 @@ static int test_default_selection(void) {
     CliOptions options;
     char *argv[] = {"cloc", CLC_TEST_ABSOLUTE_PATH};
 
-    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, argv, &options),
-                                          (int)CLI_PARSE_RUN)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, argv, &options), (int)CLI_PARSE_RUN)) {
         return 1;
     }
     if (!CLOC_EXPECT_TRUE(options.root_path == argv[1])) {
@@ -69,8 +68,7 @@ static int test_preset_selection(void) {
     CliOptions options;
     char *argv[] = {"cloc", CLC_TEST_ABSOLUTE_PATH, "--preset", "web"};
 
-    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(4, argv, &options),
-                                          (int)CLI_PARSE_RUN)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(4, argv, &options), (int)CLI_PARSE_RUN)) {
         return 1;
     }
     if (!CLOC_EXPECT_TRUE(options.selection_name != NULL)) {
@@ -87,8 +85,7 @@ static int test_custom_suffixes(void) {
     CliOptions options;
     char *argv[] = {"cloc", CLC_TEST_ABSOLUTE_PATH, "*.js", ".ts", "css"};
 
-    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(5, argv, &options),
-                                          (int)CLI_PARSE_RUN)) {
+    if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(5, argv, &options), (int)CLI_PARSE_RUN)) {
         return 1;
     }
     if (!CLOC_EXPECT_TRUE(options.selection_name != NULL)) {
@@ -111,15 +108,15 @@ static int test_invalid_arguments_fail(void) {
     char *missing_preset_argv[] = {"cloc", CLC_TEST_ABSOLUTE_PATH, "--preset"};
 
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, relative_path_argv, &options),
-                                          (int)CLI_PARSE_EXIT_FAILURE)) {
+                            (int)CLI_PARSE_EXIT_FAILURE)) {
         return 1;
     }
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(2, unknown_option_argv, &options),
-                                          (int)CLI_PARSE_EXIT_FAILURE)) {
+                            (int)CLI_PARSE_EXIT_FAILURE)) {
         return 1;
     }
     if (!CLOC_EXPECT_INT_EQ((int)cli_parse_options(3, missing_preset_argv, &options),
-                                          (int)CLI_PARSE_EXIT_FAILURE)) {
+                            (int)CLI_PARSE_EXIT_FAILURE)) {
         return 1;
     }
 

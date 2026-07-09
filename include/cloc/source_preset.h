@@ -17,16 +17,13 @@ typedef struct ClocSourcePreset {
 } ClocSourcePreset;
 
 /* Return the default preset used when users do not choose a suffix list. */
-CLOC_API const ClocSourcePreset *
-cloc_default_source_preset(void);
+CLOC_API const ClocSourcePreset *cloc_default_source_preset(void);
 
 /* Find a preset by name. Matching is case-insensitive. */
-CLOC_API const ClocSourcePreset *
-ccloc_find_source_preset(const char *name);
+CLOC_API const ClocSourcePreset *cloc_find_source_preset(const char *name);
 
 /* Return all built-in presets. If count is non-NULL, it receives the item count. */
-CLOC_API const ClocSourcePreset *
-cloc_source_presets(size_t *count);
+CLOC_API const ClocSourcePreset *cloc_source_presets(size_t *count);
 
 #ifdef __cplusplus
 }

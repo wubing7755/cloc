@@ -8,12 +8,11 @@ int main(void) {
     ClocScanResult result;
     const ClocSourcePreset *preset = cloc_default_source_preset();
 
-    if (CLOC_VERSION_MAJOR < 0 || CLOC_VERSION_MINOR < 0 ||
-        CLOC_VERSION_PATCH < 0) {
+    if (CLOC_VERSION_MAJOR < 0 || CLOC_VERSION_MINOR < 0 || CLOC_VERSION_PATCH < 0) {
         return 1;
     }
 
-    if (!preset || !ccloc_find_source_preset("common")) {
+    if (!preset || !cloc_find_source_preset("common")) {
         return 1;
     }
 

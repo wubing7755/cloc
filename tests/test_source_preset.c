@@ -19,8 +19,7 @@ static int test_default_preset(void) {
     if (!CLOC_EXPECT_TRUE(preset->suffix_count > 0U)) {
         return 1;
     }
-    if (!CLOC_EXPECT_TRUE(ccloc_find_source_preset("common") ==
-                                        preset)) {
+    if (!CLOC_EXPECT_TRUE(cloc_find_source_preset("common") == preset)) {
         return 1;
     }
 
@@ -28,8 +27,8 @@ static int test_default_preset(void) {
 }
 
 static int test_find_preset(void) {
-    const ClocSourcePreset *web = ccloc_find_source_preset("web");
-    const ClocSourcePreset *dotnet = ccloc_find_source_preset("DOTNET");
+    const ClocSourcePreset *web = cloc_find_source_preset("web");
+    const ClocSourcePreset *dotnet = cloc_find_source_preset("DOTNET");
 
     if (!CLOC_EXPECT_TRUE(web != NULL)) {
         return 1;
@@ -37,10 +36,10 @@ static int test_find_preset(void) {
     if (!CLOC_EXPECT_TRUE(dotnet != NULL)) {
         return 1;
     }
-    if (!CLOC_EXPECT_TRUE(ccloc_find_source_preset("unknown") == NULL)) {
+    if (!CLOC_EXPECT_TRUE(cloc_find_source_preset("unknown") == NULL)) {
         return 1;
     }
-    if (!CLOC_EXPECT_TRUE(ccloc_find_source_preset(NULL) == NULL)) {
+    if (!CLOC_EXPECT_TRUE(cloc_find_source_preset(NULL) == NULL)) {
         return 1;
     }
 

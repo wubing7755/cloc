@@ -15,7 +15,5 @@ int main(void) {
         return 1;
     }
 
-    return cloc_count_source_lines(&options, &result) == CLOC_STATUS_OK
-               ? 0
-               : 1;
+    return cloc_count_source_lines(&options, &result) == CLOC_STATUS_OK ? 0 : 1;
 }

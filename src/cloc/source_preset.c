@@ -43,7 +43,7 @@ const ClocSourcePreset *cloc_default_source_preset(void) {
     return &kSourcePresets[0];
 }
 
-const ClocSourcePreset *ccloc_find_source_preset(const char *name) {
+const ClocSourcePreset *cloc_find_source_preset(const char *name) {
     size_t index = 0;
 
     for (index = 0; index < CLC_ARRAY_COUNT(kSourcePresets); ++index) {

@@ -38,9 +38,7 @@ static inline int ct_expect_ull_eq(unsigned long long actual, unsigned long long
 }
 
 #define CLOC_EXPECT_TRUE(e) ct_expect_true((e), #e, __FILE__, __LINE__)
-#define CLOC_EXPECT_INT_EQ(a, e)                                                     \
-    ct_expect_int_eq((a), (e), #a, #e, __FILE__, __LINE__)
-#define CLOC_EXPECT_ULL_EQ(a, e)                                                     \
-    ct_expect_ull_eq((a), (e), #a, #e, __FILE__, __LINE__)
+#define CLOC_EXPECT_INT_EQ(a, e) ct_expect_int_eq((a), (e), #a, #e, __FILE__, __LINE__)
+#define CLOC_EXPECT_ULL_EQ(a, e) ct_expect_ull_eq((a), (e), #a, #e, __FILE__, __LINE__)
 
 #endif /* CLOC_TEST_ASSERT_H */

@@ -25,8 +25,7 @@ int main(int argc, char **argv) {
 
     status = cloc_count_source_lines(&options, &result);
     if (status != CLOC_STATUS_OK) {
-        fprintf(stderr, "Failed to count source lines: %s\n",
-                cloc_status_name(status));
+        fprintf(stderr, "Failed to count source lines: %s\n", cloc_status_name(status));
         return 1;
     }
 
