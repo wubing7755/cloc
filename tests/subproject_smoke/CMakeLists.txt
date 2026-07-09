@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(ClocSubprojectSmoke LANGUAGES C)
+project(clocSubprojectSmoke LANGUAGES C)
 
 if(NOT DEFINED CLOC_SOURCE_DIR)
-    message(FATAL_ERROR "CLOC_SOURCE_DIR must point at the Cloc source tree")
+    message(FATAL_ERROR "CLOC_SOURCE_DIR must point at the cloc source tree")
 endif()
 
 add_subdirectory("${CLOC_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/cloc-standard")
 
-if(NOT TARGET Cloc::cloc_core)
-    message(FATAL_ERROR "Expected Cloc::cloc_core alias target")
+if(NOT TARGET cloc::cloc_core)
+    message(FATAL_ERROR "Expected cloc::cloc_core alias target")
 endif()
 
 foreach(option_name IN ITEMS
@@ -30,7 +30,7 @@ foreach(target_name IN ITEMS
 endforeach()
 
 add_executable(subproject_smoke main.c)
-target_link_libraries(subproject_smoke PRIVATE Cloc::cloc_core)
+target_link_libraries(subproject_smoke PRIVATE cloc::cloc_core)
 
 enable_testing()
 add_test(NAME subproject_smoke COMMAND subproject_smoke)

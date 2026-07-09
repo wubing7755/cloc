@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(Cloc
+project(cloc
     VERSION 0.1.0
     DESCRIPTION "A C11 command-line tool for counting project source lines"
     LANGUAGES C
@@ -43,7 +43,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/Sources.cmake")
 
 add_library(cloc_core ${CLOC_CORE_SOURCES})
-add_library(Cloc::cloc_core ALIAS cloc_core)
+add_library(cloc::cloc_core ALIAS cloc_core)
 
 target_compile_features(cloc_core PUBLIC c_std_11)
 

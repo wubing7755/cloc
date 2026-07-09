@@ -133,7 +133,7 @@ static const char *display_program_name(const char *program_name) {
 static void print_usage(FILE *stream, const char *program_name) {
     const char *name = display_program_name(program_name);
 
-    fprintf(stream, "Cloc - count source-code lines in a project.\n\n");
+    fprintf(stream, "cloc - count source-code lines in a project.\n\n");
     fprintf(stream, "Quick start:\n");
     fprintf(stream, "  %s C:\\work\\project\n", name);
     fprintf(stream, "  %s --interactive\n\n", name);
@@ -363,7 +363,7 @@ static int configure_interactive_selection(CliOptions *options) {
 }
 
 static CliParseResult configure_interactive(CliOptions *options) {
-    printf("Cloc interactive mode\n\n");
+    printf("cloc interactive mode\n\n");
 
     if (!configure_interactive_path(options)) {
         return CLI_PARSE_EXIT_FAILURE;

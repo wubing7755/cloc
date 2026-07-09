@@ -1,5 +1,5 @@
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/ClocTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/clocTargets.cmake")
 
-check_required_components(Cloc)
+check_required_components(cloc)

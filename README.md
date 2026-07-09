@@ -1,6 +1,6 @@
-# Cloc
+# cloc
 
-Cloc is a C11 command-line tool for counting source lines in a
+cloc is a C11 command-line tool for counting source lines in a
 project directory. It is intended for cases such as software copyright
 registration forms where a total source-code line count is required.
 
@@ -84,7 +84,7 @@ directory:
 **Windows PowerShell**
 
 ```powershell
-.\scripts\publish.ps1 C:\tools\Cloc
+.\scripts\publish.ps1 C:\tools\cloc
 ```
 
 **Linux/macOS or MSYS2/Git Bash**
@@ -218,8 +218,8 @@ errors, see [doc/guides/cmake.md](doc/guides/cmake.md).
 The install rules generate a CMake package config:
 
 ```cmake
-find_package(Cloc CONFIG REQUIRED)
-target_link_libraries(app PRIVATE Cloc::cloc_core)
+find_package(cloc CONFIG REQUIRED)
+target_link_libraries(app PRIVATE cloc::cloc_core)
 ```
 
 The `tests/package_smoke/` project validates installed C and C++ consumers.

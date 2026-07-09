@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(ClocPackageSmoke LANGUAGES C CXX)
+project(clocPackageSmoke LANGUAGES C CXX)
 
-find_package(Cloc CONFIG REQUIRED)
+find_package(cloc CONFIG REQUIRED)
 
 function(copy_cloc_runtime target)
     if(NOT WIN32)
@@ -16,7 +16,7 @@ function(copy_cloc_runtime target)
             MINSIZEREL
             NOCONFIG)
         get_target_property(runtime_location
-            Cloc::cloc_core
+            cloc::cloc_core
             "IMPORTED_LOCATION_${config_name}")
         if(runtime_location)
             add_custom_command(TARGET ${target} POST_BUILD
@@ -29,11 +29,11 @@ function(copy_cloc_runtime target)
 endfunction()
 
 add_executable(package_smoke_c main.c)
-target_link_libraries(package_smoke_c PRIVATE Cloc::cloc_core)
+target_link_libraries(package_smoke_c PRIVATE cloc::cloc_core)
 copy_cloc_runtime(package_smoke_c)
 
 add_executable(package_smoke_cxx cxx_header_smoke.cpp)
-target_link_libraries(package_smoke_cxx PRIVATE Cloc::cloc_core)
+target_link_libraries(package_smoke_cxx PRIVATE cloc::cloc_core)
 copy_cloc_runtime(package_smoke_cxx)
 
 enable_testing()
